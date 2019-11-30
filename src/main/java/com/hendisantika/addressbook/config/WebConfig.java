@@ -39,7 +39,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 	// If you want to ignore some request or request patterns then you can
 	// specify that inside this method
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web) {
 		super.configure(web);
 	}
 

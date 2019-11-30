@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * To change this template use File | Settings | File Templates.
  */
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
-	public AppUser findOneByUsername(String username);
+	AppUser findOneByUsername(String username);
 }

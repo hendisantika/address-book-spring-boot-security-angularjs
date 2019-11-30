@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,23 +33,23 @@ public class AddressRestController {
 
 	@RequestMapping(value = "/address/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Address> addressById(@PathVariable Long id) {
-		Address address = addressRepository.findOne(id);
-		if (address == null) {
+		Optional<Address> address = addressRepository.findById(id);
+		if (!address.isPresent()) {
 			return new ResponseEntity<Address>(HttpStatus.NO_CONTENT);
 		} else {
-			return new ResponseEntity<Address>(address, HttpStatus.OK);
+			return new ResponseEntity<Address>(address.get(), HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping(value = "/address/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Address> deleteAddress(@PathVariable Long id) {
-		Address address = addressRepository.findOne(id);
-		if (address == null) {
+		Optional<Address> address = addressRepository.findById(id);
+		if (!address.isPresent()) {
 			return new ResponseEntity<Address>(HttpStatus.NO_CONTENT);
 		} else {
-			addressRepository.delete(address);
-			return new ResponseEntity<Address>(address, HttpStatus.OK);
+			addressRepository.delete(address.get());
+			return new ResponseEntity<Address>(address.get(), HttpStatus.OK);
 		}
 
 	}

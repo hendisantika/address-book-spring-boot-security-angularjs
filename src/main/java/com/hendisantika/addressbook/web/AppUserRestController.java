@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,26 +37,26 @@ public class AppUserRestController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
 	public ResponseEntity<AppUser> userById(@PathVariable Long id) {
-		AppUser appUser = appUserRepository.findOne(id);
-		if (appUser == null) {
+		Optional<AppUser> appUser = appUserRepository.findById(id);
+		if (!appUser.isPresent()) {
 			return new ResponseEntity<AppUser>(HttpStatus.NO_CONTENT);
 		} else {
-			return new ResponseEntity<AppUser>(appUser, HttpStatus.OK);
+			return new ResponseEntity<AppUser>(appUser.get(), HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<AppUser> deleteUser(@PathVariable Long id) {
-		AppUser appUser = appUserRepository.findOne(id);
+		Optional<AppUser> appUser = appUserRepository.findById(id);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String loggedUsername = auth.getName();
-		if (appUser == null) {
+		if (!appUser.isPresent()) {
 			return new ResponseEntity<AppUser>(HttpStatus.NO_CONTENT);
-		} else if (appUser.getUsername().equalsIgnoreCase(loggedUsername)) {
+		} else if (appUser.get().getUsername().equalsIgnoreCase(loggedUsername)) {
 			throw new RuntimeException("You cannot delete your account");
 		} else {
-			appUserRepository.delete(appUser);
-			return new ResponseEntity<AppUser>(appUser, HttpStatus.OK);
+			appUserRepository.delete(appUser.get());
+			return new ResponseEntity<AppUser>(appUser.get(), HttpStatus.OK);
 		}
 
 	}
